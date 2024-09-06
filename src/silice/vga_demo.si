@@ -67,8 +67,8 @@ unit vga_demo(
     uint5  pidB = doomhead[{rv[1,5],(ru[1,5] + frame[1,5])}];
     uint18 palB = sub666[pidB];
 //->
-    uint5  pidC = doomhead[{rv[0,5],(ru[0,5] + frame[2,5])}];
-    uint18 palC = sub666[pidC];
+//    uint5  pidC = doomhead[{rv[0,5],(ru[0,5] + frame[2,5])}];
+//    uint18 palC = sub666[pidC];
 
     ru = u - __signed(vT>>8);
     rv = __signed(uT>>8) + v;
@@ -76,7 +76,7 @@ unit vga_demo(
 
     uint18 pal    = pidA == 0
                     ? (pidB == 0 ?
-                        (pidC == 0 ? 0 : {2b0,palC[14,4],2b0,palC[8,4],2b0,palC[2,4]})
+                      0 //(pidC == 0 ? 0 : {2b0,palC[14,4],2b0,palC[8,4],2b0,palC[2,4]})
                       : {1b0,palB[13,5],1b0,palB[7,5],1b0,palB[1,5]})
                     : palA;
 
