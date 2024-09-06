@@ -25,7 +25,7 @@ $$end
 
   always {
     video_clock = clock;
-
+/*
     video_r  = (demo.video_r == 2b11 ? $63$ : 0)|
                (demo.video_r == 2b10 ? $2*63//3$ : 0)|
                (demo.video_r == 2b01 ? $63//3$ : 0)
@@ -38,7 +38,10 @@ $$end
                (demo.video_b == 2b10 ? $2*63//3$ : 0)|
                (demo.video_b == 2b01 ? $63//3$ : 0)
                ;
-
+*/
+    video_r  = {demo.video_r,4b0};
+    video_g  = {demo.video_g,4b0};
+    video_b  = {demo.video_b,4b0};
     //video_r  = demo.video_r;
     //video_g  = demo.video_g;
     //video_b  = demo.video_b;
