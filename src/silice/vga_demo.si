@@ -149,13 +149,15 @@ unit music(
   output! uint1 audio1
 ) {
 
-  uint7 keys[64] = {10,10,21,10,10,18,10,10,15,10,10,15,10,10,15,15,10,10,21,10,
-  10,18,10,10,15,10,10,15,0,10,10,21,10,10,18,10,10,15,10,10,15,10,10,15,15,10,
-  10,21,10,10,18,10,10,15,10,10,15,0,0,0,0,0,0,0,};
+  uint7 keys[32] = {
+    10,10,21,10, 10,18,10,10,
+    15,10,10,15, 10,10,15,15,
+    10,10,21,10, 10,18,10,10,
+    15,10,10,15, 0,0,0,0};
 
   //  ^ could reduce if skipping highest tones
 
-  uint6  idx          = 0;
+  uint5  idx          = 0;
   uint9  clock_count  = 0;
   uint13 rythm_count  = 0;
   uint13 qpos         = 0;
@@ -171,7 +173,7 @@ unit music(
 
     uint1 next_inc  = next_sample && (rythm_count[0,8] == 8d0);
     uint1 next_note = rythm_count[8,5] == 5d25;
-    idx             = next_note    ? (idx == 7d95 ? 7d32 : idx + 1) : idx;
+    idx             = next_note ? (idx + 1) : idx;
     squ_env      = next_note ? {6{|keys[idx]}}
                  : (next_inc ? ((squ_env  != 0) ? squ_env  - 1 : 0) : squ_env);
     rythm_count  = next_note ? 0

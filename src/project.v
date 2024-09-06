@@ -215,8 +215,8 @@ reg signed [7:0] _t_audio8;
 reg  [0:0] _t_audio1;
 wire signed [7:0] _w_squ_wave;
 
-reg  [5:0] _d_idx;
-reg  [5:0] _q_idx;
+reg  [4:0] _d_idx;
+reg  [4:0] _q_idx;
 reg  [8:0] _d_clock_count;
 reg  [8:0] _q_clock_count;
 reg  [12:0] _d_rythm_count;
@@ -252,7 +252,7 @@ _d_qpos = `_c___block_1_next_sample ? (_q_qpos+_c_keys[_q_idx]):_q_qpos;
 
 
 
-_d_idx = `_c___block_1_next_note ? (_q_idx==7'd95 ? 7'd32:_q_idx+1):_q_idx;
+_d_idx = `_c___block_1_next_note ? (_q_idx+1):_q_idx;
 
 _d_squ_env = `_c___block_1_next_note ? {6{|_c_keys[_d_idx]}}:(`_c___block_1_next_inc ? ((_q_squ_env!=0) ? _q_squ_env-1:0):_q_squ_env);
 
@@ -268,7 +268,7 @@ _d_clock_count = (_q_clock_count+1);
 // pipeline stage triggers
 end
 // ==== wires ====
-wire  [6:0] _c_keys[63:0];
+wire  [6:0] _c_keys[31:0];
 assign _c_keys[0] = 10;
 assign _c_keys[1] = 10;
 assign _c_keys[2] = 21;
@@ -298,41 +298,9 @@ assign _c_keys[25] = 10;
 assign _c_keys[26] = 10;
 assign _c_keys[27] = 15;
 assign _c_keys[28] = 0;
-assign _c_keys[29] = 10;
-assign _c_keys[30] = 10;
-assign _c_keys[31] = 21;
-assign _c_keys[32] = 10;
-assign _c_keys[33] = 10;
-assign _c_keys[34] = 18;
-assign _c_keys[35] = 10;
-assign _c_keys[36] = 10;
-assign _c_keys[37] = 15;
-assign _c_keys[38] = 10;
-assign _c_keys[39] = 10;
-assign _c_keys[40] = 15;
-assign _c_keys[41] = 10;
-assign _c_keys[42] = 10;
-assign _c_keys[43] = 15;
-assign _c_keys[44] = 15;
-assign _c_keys[45] = 10;
-assign _c_keys[46] = 10;
-assign _c_keys[47] = 21;
-assign _c_keys[48] = 10;
-assign _c_keys[49] = 10;
-assign _c_keys[50] = 18;
-assign _c_keys[51] = 10;
-assign _c_keys[52] = 10;
-assign _c_keys[53] = 15;
-assign _c_keys[54] = 10;
-assign _c_keys[55] = 10;
-assign _c_keys[56] = 15;
-assign _c_keys[57] = 0;
-assign _c_keys[58] = 0;
-assign _c_keys[59] = 0;
-assign _c_keys[60] = 0;
-assign _c_keys[61] = 0;
-assign _c_keys[62] = 0;
-assign _c_keys[63] = 0;
+assign _c_keys[29] = 0;
+assign _c_keys[30] = 0;
+assign _c_keys[31] = 0;
 // ===============
 
 always @(posedge clock) begin
