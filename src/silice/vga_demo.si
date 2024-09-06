@@ -48,11 +48,6 @@ unit vga_demo(
   int8   v  = 0;
   uint15 vT = 0;
 
-  int8  ru = uninitialized;
-  int8  rv = uninitialized;
-  uint5  i    = uninitialized;
-  uint1  clip = uninitialized;
-  uint5  j    = uninitialized;
   uint10 addr = uninitialized;
 
   always {
@@ -65,7 +60,7 @@ unit vga_demo(
 
     //uint1  select = ru[6,1] ^ rv[6,1];
 
-    uint5  pidA = doomhead[addr] & {5{clip}};
+    uint5  pidA = doomhead[addr];
     uint18 palA = sub666[pidA];
 //->
 //    uint5  pidB = doomhead[{rv[1,5],(ru[1,5] + frame[1,5])}];
@@ -74,12 +69,12 @@ unit vga_demo(
 //    uint5  pidC = doomhead[{rv[0,5],(ru[0,5] + frame[2,5])}];
 //    uint18 palC = sub666[pidC];
 
-    ru   = u - __signed(vT>>8);
-    rv   = __signed(uT>>8) + v;
-    i    = (ru[2,5] + frame[0,5]);
-    clip = i<5d24;
-    j    = rv[2,5];
-    addr = (i + {j,4b0} + {j,3b0});
+    int8  ru   = u - __signed(vT>>8);
+    int8  rv   = __signed(uT>>8) + v;
+    uint5 i    = (ru[2,5] + frame[0,5]);
+    uint1 clip = i<5d24;
+    uint5 j    = rv[2,5];
+    addr       = (i + {j,4b0} + {j,3b0}) & {10{clip}};
 
     uint18 pal    = palA; /*pidA == 0
                     ? //(pidB == 0 ?
