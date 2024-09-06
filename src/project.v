@@ -186,10 +186,170 @@ end
 endmodule
 
 // ==== defines ====
+`undef  _c___block_1_next_sample
+`define _c___block_1_next_sample (1'((_q_clock_count[0+:9]==0)))
+`undef  _c___block_1_sum
+`define _c___block_1_sum (9'(_w_squ_wave))
+`undef  _c___block_1_next_inc
+`define _c___block_1_next_inc (1'(`_c___block_1_next_sample&&(_q_rythm_count[0+:8]==8'd0)))
+`undef  _c___block_1_next_note
+`define _c___block_1_next_note (1'(_q_rythm_count[8+:5]==5'd25))
+`undef  _c___block_1_smpl
+`define _c___block_1_smpl (7'($unsigned($signed(_t_audio8)+$signed(8'd64))))
+// ===============
+
+module M_music_M_main_demo_zic (
+out_audio8,
+out_audio1,
+reset,
+out_clock,
+clock
+);
+output signed [7:0] out_audio8;
+output  [0:0] out_audio1;
+input reset;
+output out_clock;
+input clock;
+assign out_clock = clock;
+reg signed [7:0] _t_audio8;
+reg  [0:0] _t_audio1;
+wire signed [7:0] _w_squ_wave;
+
+reg  [6:0] _d_idx;
+reg  [6:0] _q_idx;
+reg  [8:0] _d_clock_count;
+reg  [8:0] _q_clock_count;
+reg  [12:0] _d_rythm_count;
+reg  [12:0] _q_rythm_count;
+reg  [12:0] _d_qpos;
+reg  [12:0] _q_qpos;
+reg  [5:0] _d_squ_env;
+reg  [5:0] _q_squ_env;
+assign out_audio8 = _t_audio8;
+assign out_audio1 = _t_audio1;
+
+
+assign _w_squ_wave = _q_qpos[12+:1] ? _q_squ_env[3+:3]:-_q_squ_env[3+:3];
+
+`ifdef FORMAL
+initial begin
+assume(reset);
+end
+`endif
+always @* begin
+_d_idx = _q_idx;
+_d_clock_count = _q_clock_count;
+_d_rythm_count = _q_rythm_count;
+_d_qpos = _q_qpos;
+_d_squ_env = _q_squ_env;
+// _always_pre
+// __block_1
+
+
+_t_audio8 = ($signed(`_c___block_1_sum)>>>1);
+
+_d_qpos = `_c___block_1_next_sample ? (_q_qpos+_c_keys[_q_idx]):_q_qpos;
+
+
+
+_d_idx = `_c___block_1_next_note ? (_q_idx==7'd95 ? 7'd32:_q_idx+1):_q_idx;
+
+_d_squ_env = `_c___block_1_next_note ? {6{|_c_keys[_d_idx]}}:(`_c___block_1_next_inc ? ((_q_squ_env!=0) ? _q_squ_env-1:0):_q_squ_env);
+
+_d_rythm_count = `_c___block_1_next_note ? 0:(`_c___block_1_next_sample ? _q_rythm_count+1:_q_rythm_count);
+
+
+_t_audio1 = _q_clock_count[0+:7]<`_c___block_1_smpl ? 1'b1:1'b0;
+
+_d_clock_count = (_q_clock_count+1);
+
+// __block_2
+// _always_post
+// pipeline stage triggers
+end
+// ==== wires ====
+wire  [6:0] _c_keys[63:0];
+assign _c_keys[0] = 10;
+assign _c_keys[1] = 10;
+assign _c_keys[2] = 21;
+assign _c_keys[3] = 10;
+assign _c_keys[4] = 10;
+assign _c_keys[5] = 18;
+assign _c_keys[6] = 10;
+assign _c_keys[7] = 10;
+assign _c_keys[8] = 15;
+assign _c_keys[9] = 10;
+assign _c_keys[10] = 10;
+assign _c_keys[11] = 15;
+assign _c_keys[12] = 10;
+assign _c_keys[13] = 10;
+assign _c_keys[14] = 15;
+assign _c_keys[15] = 15;
+assign _c_keys[16] = 10;
+assign _c_keys[17] = 10;
+assign _c_keys[18] = 21;
+assign _c_keys[19] = 10;
+assign _c_keys[20] = 10;
+assign _c_keys[21] = 18;
+assign _c_keys[22] = 10;
+assign _c_keys[23] = 10;
+assign _c_keys[24] = 15;
+assign _c_keys[25] = 10;
+assign _c_keys[26] = 10;
+assign _c_keys[27] = 15;
+assign _c_keys[28] = 0;
+assign _c_keys[29] = 10;
+assign _c_keys[30] = 10;
+assign _c_keys[31] = 21;
+assign _c_keys[32] = 10;
+assign _c_keys[33] = 10;
+assign _c_keys[34] = 18;
+assign _c_keys[35] = 10;
+assign _c_keys[36] = 10;
+assign _c_keys[37] = 15;
+assign _c_keys[38] = 10;
+assign _c_keys[39] = 10;
+assign _c_keys[40] = 15;
+assign _c_keys[41] = 10;
+assign _c_keys[42] = 10;
+assign _c_keys[43] = 15;
+assign _c_keys[44] = 15;
+assign _c_keys[45] = 10;
+assign _c_keys[46] = 10;
+assign _c_keys[47] = 21;
+assign _c_keys[48] = 10;
+assign _c_keys[49] = 10;
+assign _c_keys[50] = 18;
+assign _c_keys[51] = 10;
+assign _c_keys[52] = 10;
+assign _c_keys[53] = 15;
+assign _c_keys[54] = 10;
+assign _c_keys[55] = 10;
+assign _c_keys[56] = 15;
+assign _c_keys[57] = 0;
+assign _c_keys[58] = 0;
+assign _c_keys[59] = 0;
+assign _c_keys[60] = 0;
+assign _c_keys[61] = 0;
+assign _c_keys[62] = 0;
+assign _c_keys[63] = 0;
+// ===============
+
+always @(posedge clock) begin
+_q_idx <= (reset) ? 0 : _d_idx;
+_q_clock_count <= (reset) ? 0 : _d_clock_count;
+_q_rythm_count <= (reset) ? 0 : _d_rythm_count;
+_q_qpos <= (reset) ? 0 : _d_qpos;
+_q_squ_env <= (reset) ? 0 : _d_squ_env;
+end
+
+endmodule
+
+// ==== defines ====
 `undef  _c___block_1_select
-`define _c___block_1_select (1'(_t___block_1_ru[2+:1]^_t___block_1_rv[2+:1]))
+`define _c___block_1_select (1'(_t___block_1_ru[6+:1]^_t___block_1_rv[6+:1]))
 `undef  _c___block_1_pid
-`define _c___block_1_pid (5'(_c_doomhead[{`_c___block_1_select^_q_frame[3+:1],_t___block_1_rv[2+:5],_t___block_1_ru[2+:5]}]))
+`define _c___block_1_pid (5'(_c_doomhead[{`_c___block_1_select^_q_frame[3+:1],_t___block_1_rv[1+:5],_t___block_1_ru[1+:5]}]))
 `undef  _c___block_1_bval6
 `define _c___block_1_bval6 (6'({_t___block_1_q6[0+:1],_t___block_1_p6[0+:1],_t___block_1_q6[1+:1],_t___block_1_p6[1+:1],_t___block_1_q6[2+:1],_t___block_1_p6[2+:1]}))
 `undef  _c___block_1_frame_tick
@@ -206,6 +366,8 @@ out_video_g,
 out_video_b,
 out_video_hs,
 out_video_vs,
+out_audio8,
+out_audio1,
 reset,
 out_clock,
 clock
@@ -215,6 +377,8 @@ output  [1:0] out_video_g;
 output  [1:0] out_video_b;
 output  [0:0] out_video_hs;
 output  [0:0] out_video_vs;
+output  [7:0] out_audio8;
+output  [0:0] out_audio1;
 input reset;
 output out_clock;
 input clock;
@@ -225,6 +389,8 @@ wire  [0:0] _w_vga_active;
 wire  [0:0] _w_vga_vblank;
 wire  [11:0] _w_vga_vga_x;
 wire  [10:0] _w_vga_vga_y;
+wire signed [7:0] _w_zic_audio8;
+wire  [0:0] _w_zic_audio1;
 reg signed [6:0] _t___block_1_ru;
 reg signed [6:0] _t___block_1_rv;
 reg  [17:0] _t___block_1_pal;
@@ -255,6 +421,8 @@ assign out_video_g = _t_video_g;
 assign out_video_b = _t_video_b;
 assign out_video_hs = _t_video_hs;
 assign out_video_vs = _t_video_vs;
+assign out_audio8 = _w_zic_audio8;
+assign out_audio1 = _w_zic_audio1;
 M_vga_M_main_demo_vga vga (
 .out_vga_hs(_w_vga_vga_hs),
 .out_vga_vs(_w_vga_vga_vs),
@@ -262,6 +430,11 @@ M_vga_M_main_demo_vga vga (
 .out_vblank(_w_vga_vblank),
 .out_vga_x(_w_vga_vga_x),
 .out_vga_y(_w_vga_vga_y),
+.reset(reset),
+.clock(clock));
+M_music_M_main_demo_zic zic (
+.out_audio8(_w_zic_audio8),
+.out_audio1(_w_zic_audio1),
 .reset(reset),
 .clock(clock));
 
@@ -2462,7 +2635,11 @@ wire  [1:0] _w_demo_video_g;
 wire  [1:0] _w_demo_video_b;
 wire  [0:0] _w_demo_video_hs;
 wire  [0:0] _w_demo_video_vs;
+wire  [7:0] _w_demo_audio8;
+wire  [0:0] _w_demo_audio1;
 
+reg  [7:0] _d_uio_o;
+reg  [7:0] _q_uio_o;
 reg  [7:0] _d_uio_oenable;
 reg  [7:0] _q_uio_oenable;
 reg  [7:0] _d_uo;
@@ -2475,26 +2652,28 @@ M_vga_demo_M_main_demo demo (
 .out_video_b(_w_demo_video_b),
 .out_video_hs(_w_demo_video_hs),
 .out_video_vs(_w_demo_video_vs),
+.out_audio8(_w_demo_audio8),
+.out_audio1(_w_demo_audio1),
 .reset(reset),
 .clock(clock));
 
 
 assign inout_uio_oe[0] = _q_uio_oenable[0];
-assign inout_uio_o[0] = 1'b0;
+assign inout_uio_o[0] = _q_uio_o[0];
 assign inout_uio_oe[1] = _q_uio_oenable[1];
-assign inout_uio_o[1] = 1'b0;
+assign inout_uio_o[1] = _q_uio_o[1];
 assign inout_uio_oe[2] = _q_uio_oenable[2];
-assign inout_uio_o[2] = 1'b0;
+assign inout_uio_o[2] = _q_uio_o[2];
 assign inout_uio_oe[3] = _q_uio_oenable[3];
-assign inout_uio_o[3] = 1'b0;
+assign inout_uio_o[3] = _q_uio_o[3];
 assign inout_uio_oe[4] = _q_uio_oenable[4];
-assign inout_uio_o[4] = 1'b0;
+assign inout_uio_o[4] = _q_uio_o[4];
 assign inout_uio_oe[5] = _q_uio_oenable[5];
-assign inout_uio_o[5] = 1'b0;
+assign inout_uio_o[5] = _q_uio_o[5];
 assign inout_uio_oe[6] = _q_uio_oenable[6];
-assign inout_uio_o[6] = 1'b0;
+assign inout_uio_o[6] = _q_uio_o[6];
 assign inout_uio_oe[7] = _q_uio_oenable[7];
-assign inout_uio_o[7] = 1'b0;
+assign inout_uio_o[7] = _q_uio_o[7];
 
 `ifdef FORMAL
 initial begin
@@ -2502,6 +2681,7 @@ assume(reset);
 end
 `endif
 always @* begin
+_d_uio_o = _q_uio_o;
 _d_uio_oenable = _q_uio_oenable;
 _d_uo = _q_uo;
 // _always_pre
@@ -2522,7 +2702,9 @@ _d_uo[6+:1] = _w_demo_video_b[0+:1];
 
 _d_uo[2+:1] = _w_demo_video_b[1+:1];
 
-_d_uio_oenable = 8'b0;
+_d_uio_oenable = {1'b1,7'b0};
+
+_d_uio_o[7+:1] = _w_demo_audio1;
 
 // __block_2
 // _always_post
@@ -2530,6 +2712,7 @@ _d_uio_oenable = 8'b0;
 end
 
 always @(posedge clock) begin
+_q_uio_o <= _d_uio_o;
 _q_uio_oenable <= _d_uio_oenable;
 _q_uo <= _d_uo;
 end

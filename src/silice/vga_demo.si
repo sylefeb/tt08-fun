@@ -18,9 +18,13 @@ unit vga_demo(
   output! uint2 video_b,
   output! uint1 video_hs,
   output! uint1 video_vs,
+  output! uint8 audio8,
+  output! uint1 audio1,
 ) {
 
   vga vga;
+
+  music zic(audio8 :> audio8, audio1 :> audio1);
 
   $doomhead$
   $sub666$
@@ -55,9 +59,9 @@ unit vga_demo(
     int7 ru = u - __signed(vT>>8);
     int7 rv = __signed(uT>>8) + v;
 
-    uint1  select = ru[2,1] ^ rv[2,1];
+    uint1  select = ru[6,1] ^ rv[6,1];
 
-    uint5  pid    = doomhead[{select^frame[3,1],rv[2,5],ru[2,5]}];
+    uint5  pid    = doomhead[{select^frame[3,1],rv[1,5],ru[1,5]}];
     uint18 pal    = pid == 0 ? 0 : sub666[pid];
 /*
     uint4 p4      = {vga.vga_y[0,2],vga.vga_x[0,2]};
@@ -107,6 +111,54 @@ unit vga_demo(
 
   }
 
+}
+
+$$  base_freq_mhz      = 25     -- FPGA frequency
+$$  audio_freq_khz     = 48.828 -- Audio frequency (target)
+$$  cycles_per_sample  = math.floor(base_freq_mhz*1000/audio_freq_khz)
+$$  print(" ===================> cycles_per_sample     : " .. cycles_per_sample)
+$$  print(" ===================> true audio freq (kHz) : " .. base_freq_mhz*1000/cycles_per_sample)
+
+unit music(
+  output! int8  audio8,
+  output! uint1 audio1
+) {
+
+  uint7 keys[64] = {10,10,21,10,10,18,10,10,15,10,10,15,10,10,15,15,10,10,21,10,
+  10,18,10,10,15,10,10,15,0,10,10,21,10,10,18,10,10,15,10,10,15,10,10,15,15,10,
+  10,21,10,10,18,10,10,15,10,10,15,0,0,0,0,0,0,0,};
+
+  //  ^ could reduce if skipping highest tones
+
+  uint7  idx          = 0;
+  uint9  clock_count  = 0;
+  uint13 rythm_count  = 0;
+  uint13 qpos         = 0;
+  uint6  squ_env      = 0;
+  int8   squ_wave <:: qpos[12,1] ? squ_env[3,3] : -squ_env[3,3];
+
+  always {
+    uint1 next_sample = (clock_count[0,9] == 0);
+
+    int9 sum        = squ_wave;
+    audio8          = (sum>>>1);
+    qpos            = next_sample ? (qpos + keys[idx]) : qpos;
+
+    uint1 next_inc  = next_sample && (rythm_count[0,8] == 8d0);
+    uint1 next_note = rythm_count[8,5] == 5d25;
+    idx             = next_note    ? (idx == 7d95 ? 7d32 : idx + 1) : idx;
+    squ_env      = next_note ? {6{|keys[idx]}}
+                 : (next_inc ? ((squ_env  != 0) ? squ_env  - 1 : 0) : squ_env);
+    rythm_count  = next_note ? 0
+                 : (next_sample ? rythm_count + 1 : rythm_count);
+
+    // 1bit PWM
+    uint7 smpl  = __unsigned(__signed(audio8) + __signed(8d64));
+
+    audio1      = clock_count[0,7] < smpl ? 1b1 : 1b0;
+
+    clock_count = (clock_count + 1);
+  }
 }
 
 // -------------------------

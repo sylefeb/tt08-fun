@@ -22,7 +22,8 @@ unit main(
     uo[6,1] = demo.video_b[0,1];
     uo[2,1] = demo.video_b[1,1];
 
-    uio.oenable = 8b0;
+    uio.oenable = {1b1,7b0};
+    uio.o[7,1]  = demo.audio1;
   }
 
 }
