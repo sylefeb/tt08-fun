@@ -10,7 +10,7 @@ $include('../common/vga.si')
 
 // -------------------------
 
-$include('doomhead.si')
+// include('doomhead.si')
 
 // -------------------------
 
@@ -28,8 +28,31 @@ unit vga_demo(
 
   music zic(audio8 :> audio8, audio1 :> audio1);
 
-  $doomhead$
-  $sub666$
+$$ img = get_image_as_table('STFGOD0.tga')
+$$ pal = get_palette_as_table('STFGOD0.tga')
+$$
+uint12 sub666[16] = {
+$$ for i=1,16 do
+$$   local p = pal[i]
+$$   local b = p>>16
+$$   local g = (p>>8)&255
+$$   local r = (p)&255
+$$   print('index' .. i .. ' ' .. r .. ',' .. g .. ',' .. b)
+$$   local rgb_444  = (b>>4) + (g>>4)*16 + (r>>4)*16*16
+     12d$rgb_444$,
+$$ end
+};
+$$  local w = #img[1]
+$$  local h = #img
+uint4 doomhead[] = {
+$$  for j=1,h do
+$$    for i=1,w do
+$$      local idx  = img[j][i]
+      4d$idx$,
+$$    end
+$$  end
+};
+
 
   uint1  prev_vs = uninitialized;
   uint1  prev_hs = uninitialized;
