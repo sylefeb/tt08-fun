@@ -346,12 +346,22 @@ end
 endmodule
 
 // ==== defines ====
-`undef  _c___block_1_select
-`define _c___block_1_select (1'(_t___block_1_ru[6+:1]^_t___block_1_rv[6+:1]))
 `undef  _c___block_1_pid
-`define _c___block_1_pid (5'(_c_doomhead[{1'b0,_t___block_1_rv[1+:5],_t___block_1_ru[1+:5]}]))
-`undef  _c___block_1_bval6
-`define _c___block_1_bval6 (6'({_t___block_1_q6[0+:1],_t___block_1_p6[0+:1],_t___block_1_q6[1+:1],_t___block_1_p6[1+:1],_t___block_1_q6[2+:1],_t___block_1_p6[2+:1]}))
+`define _c___block_1_pid (5'(_c_doomhead[{_q___block_1_rv[2+:5],_q___block_1_ru[2+:5]}]))
+`undef  _c___block_1_bval4
+`define _c___block_1_bval4 (4'({_t___block_1_q4[0+:1],_t___block_1_p4[0+:1],_t___block_1_q4[1+:1],_t___block_1_p4[1+:1]}))
+`undef  _c___block_1_l_r
+`define _c___block_1_l_r (2'(_t___block_1_pal[16+:2]))
+`undef  _c___block_1_h_r
+`define _c___block_1_h_r (2'((`_c___block_1_l_r!=2'b11) ? (`_c___block_1_l_r+2'b01):2'b11))
+`undef  _c___block_1_l_g
+`define _c___block_1_l_g (2'(_t___block_1_pal[10+:2]))
+`undef  _c___block_1_h_g
+`define _c___block_1_h_g (2'((`_c___block_1_l_g!=2'b11) ? (`_c___block_1_l_g+2'b01):2'b11))
+`undef  _c___block_1_l_b
+`define _c___block_1_l_b (2'(_t___block_1_pal[4+:2]))
+`undef  _c___block_1_h_b
+`define _c___block_1_h_b (2'((`_c___block_1_l_b!=2'b11) ? (`_c___block_1_l_b+2'b01):2'b11))
 `undef  _c___block_1_frame_tick
 `define _c___block_1_frame_tick (1'(_q_prev_vs&~_w_vga_vga_vs))
 `undef  _c___block_1_tri
@@ -391,11 +401,9 @@ wire  [11:0] _w_vga_vga_x;
 wire  [10:0] _w_vga_vga_y;
 wire signed [7:0] _w_zic_audio8;
 wire  [0:0] _w_zic_audio1;
-reg signed [6:0] _t___block_1_ru;
-reg signed [6:0] _t___block_1_rv;
 reg  [17:0] _t___block_1_pal;
-reg  [5:0] _t___block_1_p6;
-reg  [2:0] _t___block_1_q6;
+reg  [3:0] _t___block_1_p4;
+reg  [1:0] _t___block_1_q4;
 reg  [1:0] _t_video_r;
 reg  [1:0] _t_video_g;
 reg  [1:0] _t_video_b;
@@ -416,6 +424,10 @@ reg signed [6:0] _d_v;
 reg signed [6:0] _q_v;
 reg  [13:0] _d_vT;
 reg  [13:0] _q_vT;
+reg signed [6:0] _d___block_1_ru;
+reg signed [6:0] _q___block_1_ru;
+reg signed [6:0] _d___block_1_rv;
+reg signed [6:0] _q___block_1_rv;
 assign out_video_r = _t_video_r;
 assign out_video_g = _t_video_g;
 assign out_video_b = _t_video_b;
@@ -453,26 +465,33 @@ _d_u = _q_u;
 _d_uT = _q_uT;
 _d_v = _q_v;
 _d_vT = _q_vT;
+_d___block_1_ru = _q___block_1_ru;
+_d___block_1_rv = _q___block_1_rv;
 // _always_pre
 // __block_1
-_t___block_1_ru = _q_u-$signed(_q_vT>>8);
 
-_t___block_1_rv = $signed(_q_uT>>8)+_q_v;
+_d___block_1_ru = _q_u-$signed(_q_vT>>8);
 
-
+_d___block_1_rv = $signed(_q_uT>>8)+_q_v;
 
 _t___block_1_pal = `_c___block_1_pid==0 ? 0:_c_sub666[`_c___block_1_pid];
 
-_t___block_1_p6 = {_w_vga_vga_x[0+:3],_w_vga_vga_y[0+:3]};
+_t___block_1_p4 = {_w_vga_vga_y[0+:2],_w_vga_vga_x[0+:2]};
 
-_t___block_1_q6 = _t___block_1_p6[0+:3]^_t___block_1_p6[3+:3];
+_t___block_1_q4 = _t___block_1_p4[0+:2]^_t___block_1_p4[2+:2];
 
 
-_t_video_r = _w_vga_active ? {2{(_t___block_1_pal[12+:6]>`_c___block_1_bval6)}}:0;
 
-_t_video_g = _w_vga_active ? {2{(_t___block_1_pal[6+:6]>`_c___block_1_bval6)}}:0;
 
-_t_video_b = _w_vga_active ? {2{(_t___block_1_pal[0+:6]>`_c___block_1_bval6)}}:0;
+
+
+
+
+_t_video_r = _w_vga_active ? (_t___block_1_pal[12+:4]<`_c___block_1_bval4 ? `_c___block_1_l_r:`_c___block_1_h_r):0;
+
+_t_video_g = _w_vga_active ? (_t___block_1_pal[6+:4]<`_c___block_1_bval4 ? `_c___block_1_l_b:`_c___block_1_h_g):0;
+
+_t_video_b = _w_vga_active ? (_t___block_1_pal[0+:4]<`_c___block_1_bval4 ? `_c___block_1_l_g:`_c___block_1_h_b):0;
 
 _t_video_hs = _w_vga_vga_hs;
 
@@ -1578,6 +1597,8 @@ _q_u <= (reset) ? 0 : _d_u;
 _q_uT <= (reset) ? 0 : _d_uT;
 _q_v <= (reset) ? 0 : _d_v;
 _q_vT <= (reset) ? 0 : _d_vT;
+_q___block_1_ru <= _d___block_1_ru;
+_q___block_1_rv <= _d___block_1_rv;
 end
 
 endmodule

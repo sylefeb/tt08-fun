@@ -35,9 +35,6 @@ unit vga_demo(
   uint1  prev_hs = uninitialized;
   uint10 frame   = 0;
 
-  // #*#   ##   ##  ## ##
-  // #  # #  # #  # # # #
-  // #*#   ##   ##  #   #
 /*
   uint32 logo[] = {
     32b11011001100011000111,
@@ -51,6 +48,9 @@ unit vga_demo(
   int7   v  = 0;
   uint14 vT = 0;
 
+  int7  ru = uninitialized;
+  int7  rv = uninitialized;
+
   always {
 
     //uint32 l_logo = logo[v[11,2]];
@@ -58,14 +58,16 @@ unit vga_demo(
 
     //int16 ru = u - ((v * __signed(frame[0,8]))>>>8);
     //int16 rv = ((u * __signed(frame[0,8]))>>>8) + v;
+
+    //uint1  select = ru[6,1] ^ rv[6,1];
+
+    uint5  pid    = doomhead[{rv[2,5],ru[2,5]}];
+
     int7 ru = u - __signed(vT>>8);
     int7 rv = __signed(uT>>8) + v;
 
-    uint1  select = ru[6,1] ^ rv[6,1];
-
-    uint5  pid    = doomhead[{1b0,rv[1,5],ru[1,5]}];
     uint18 pal    = pid == 0 ? 0 : sub666[pid];
-/*
+
     uint4 p4      = {vga.vga_y[0,2],vga.vga_x[0,2]};
     uint2 q4      = p4[0,2] ^ p4[2,2];
     uint4 bval4   = {q4[0,1],p4[0,1], q4[1,1],p4[1,1]};
@@ -80,8 +82,8 @@ unit vga_demo(
     video_r     = vga.active ? (pal[12,4]<bval4?l_r:h_r) : 0;
     video_g     = vga.active ? (pal[ 6,4]<bval4?l_b:h_g) : 0;
     video_b     = vga.active ? (pal[ 0,4]<bval4?l_g:h_b) : 0;
-*/
 
+/*
     uint6 p6      = {vga.vga_x[0,3],vga.vga_y[0,3]};
     uint3 q6      = p6[0,3] ^ p6[3,3];
     uint6 bval6   = {q6[0,1], p6[0,1], q6[1,1],p6[1,1], q6[2,1],p6[2,1]};
@@ -89,7 +91,12 @@ unit vga_demo(
     video_r     = vga.active ? {2{(pal[12,6]>bval6)}} : 0;
     video_g     = vga.active ? {2{(pal[ 6,6]>bval6)}} : 0;
     video_b     = vga.active ? {2{(pal[ 0,6]>bval6)}} : 0;
-
+*/
+/*
+    video_r     = vga.active ? pal[12,6] : 0;
+    video_g     = vga.active ? pal[ 6,6] : 0;
+    video_b     = vga.active ? pal[ 0,6] : 0;
+*/
     video_hs    = vga.vga_hs;
     video_vs    = vga.vga_vs;
 
