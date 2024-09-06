@@ -350,22 +350,8 @@ endmodule
 `define _c___block_1_pidA (5'(_c_doomhead[{_q_rv[2+:5],(_q_ru[2+:5]+_q_frame[0+:5])}]))
 `undef  _c___block_1_palA
 `define _c___block_1_palA (18'(_c_sub666[`_c___block_1_pidA]))
-`undef  _c___block_1_pidB
-`define _c___block_1_pidB (5'(_c_doomhead[{_q_rv[1+:5],(_q_ru[1+:5]+_q_frame[1+:5])}]))
 `undef  _c___block_1_bval4
 `define _c___block_1_bval4 (4'({_t___block_1_q4[0+:1],_t___block_1_p4[0+:1],_t___block_1_q4[1+:1],_t___block_1_p4[1+:1]}^{4{_q_frame[0+:1]}}))
-`undef  _c___block_1_l_r
-`define _c___block_1_l_r (2'(_t___block_1_pal[16+:2]))
-`undef  _c___block_1_h_r
-`define _c___block_1_h_r (2'((`_c___block_1_l_r!=2'b11) ? (`_c___block_1_l_r+2'b01):2'b11))
-`undef  _c___block_1_l_g
-`define _c___block_1_l_g (2'(_t___block_1_pal[10+:2]))
-`undef  _c___block_1_h_g
-`define _c___block_1_h_g (2'((`_c___block_1_l_g!=2'b11) ? (`_c___block_1_l_g+2'b01):2'b11))
-`undef  _c___block_1_l_b
-`define _c___block_1_l_b (2'(_t___block_1_pal[4+:2]))
-`undef  _c___block_1_h_b
-`define _c___block_1_h_b (2'((`_c___block_1_l_b!=2'b11) ? (`_c___block_1_l_b+2'b01):2'b11))
 `undef  _c___block_1_frame_tick
 `define _c___block_1_frame_tick (1'(_q_prev_vs&~_w_vga_vga_vs))
 `undef  _c___block_1_tri
@@ -405,10 +391,12 @@ wire  [11:0] _w_vga_vga_x;
 wire  [10:0] _w_vga_vga_y;
 wire signed [7:0] _w_zic_audio8;
 wire  [0:0] _w_zic_audio1;
-reg  [17:0] _t___block_1_palB;
 reg  [17:0] _t___block_1_pal;
 reg  [3:0] _t___block_1_p4;
 reg  [1:0] _t___block_1_q4;
+reg  [5:0] _t___block_1_l_r;
+reg  [5:0] _t___block_1_l_g;
+reg  [5:0] _t___block_1_l_b;
 reg  [1:0] _t_video_r;
 reg  [1:0] _t_video_g;
 reg  [1:0] _t_video_b;
@@ -476,31 +464,28 @@ _d_rv = _q_rv;
 // __block_1
 
 
-
-_t___block_1_palB = _c_sub666[`_c___block_1_pidB];
-
 _d_ru = _q_u-$signed(_q_vT>>8);
 
 _d_rv = $signed(_q_uT>>8)+_q_v;
 
-_t___block_1_pal = `_c___block_1_pidA==0 ? (`_c___block_1_pidB==0 ? 0:{1'b0,_t___block_1_palB[13+:5],1'b0,_t___block_1_palB[7+:5],1'b0,_t___block_1_palB[1+:5]}):`_c___block_1_palA;
+_t___block_1_pal = `_c___block_1_pidA==0 ? 0:`_c___block_1_palA;
 
 _t___block_1_p4 = {_w_vga_vga_y[0+:2],_w_vga_vga_x[0+:2]};
 
 _t___block_1_q4 = _t___block_1_p4[0+:2]^_t___block_1_p4[2+:2];
 
 
+_t___block_1_l_r = _t___block_1_pal[14+:4]+`_c___block_1_bval4;
 
+_t___block_1_l_g = _t___block_1_pal[8+:4]+`_c___block_1_bval4;
 
+_t___block_1_l_b = _t___block_1_pal[2+:4]+`_c___block_1_bval4;
 
+_t_video_r = _w_vga_active ? _t___block_1_l_r[3+:2]:0;
 
+_t_video_g = _w_vga_active ? _t___block_1_l_g[3+:2]:0;
 
-
-_t_video_r = _w_vga_active ? (_t___block_1_pal[12+:4]<`_c___block_1_bval4 ? `_c___block_1_l_r:`_c___block_1_h_r):0;
-
-_t_video_g = _w_vga_active ? (_t___block_1_pal[6+:4]<`_c___block_1_bval4 ? `_c___block_1_l_b:`_c___block_1_h_g):0;
-
-_t_video_b = _w_vga_active ? (_t___block_1_pal[0+:4]<`_c___block_1_bval4 ? `_c___block_1_l_g:`_c___block_1_h_b):0;
+_t_video_b = _w_vga_active ? _t___block_1_l_b[3+:2]:0;
 
 _t_video_hs = _w_vga_vga_hs;
 

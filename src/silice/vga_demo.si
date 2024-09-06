@@ -64,8 +64,8 @@ unit vga_demo(
     uint5  pidA = doomhead[{rv[2,5],(ru[2,5] + frame[0,5])}];
     uint18 palA = sub666[pidA];
 //->
-    uint5  pidB = doomhead[{rv[1,5],(ru[1,5] + frame[1,5])}];
-    uint18 palB = sub666[pidB];
+//    uint5  pidB = doomhead[{rv[1,5],(ru[1,5] + frame[1,5])}];
+//    uint18 palB = sub666[pidB];
 //->
 //    uint5  pidC = doomhead[{rv[0,5],(ru[0,5] + frame[2,5])}];
 //    uint18 palC = sub666[pidC];
@@ -75,25 +75,22 @@ unit vga_demo(
 
 
     uint18 pal    = pidA == 0
-                    ? (pidB == 0 ?
+                    ? //(pidB == 0 ?
                       0 //(pidC == 0 ? 0 : {2b0,palC[14,4],2b0,palC[8,4],2b0,palC[2,4]})
-                      : {1b0,palB[13,5],1b0,palB[7,5],1b0,palB[1,5]})
+                      //: {1b0,palB[13,5],1b0,palB[7,5],1b0,palB[1,5]})
                     : palA;
 
     uint4 p4      = {vga.vga_y[0,2],vga.vga_x[0,2]};
     uint2 q4      = p4[0,2] ^ p4[2,2];
     uint4 bval4   = {q4[0,1],p4[0,1], q4[1,1],p4[1,1]} ^ {4{frame[0,1]}};
 
-    uint2 l_r     = pal[16,2];
-    uint2 h_r     = (l_r != 2b11) ? (l_r + 2b01) : 2b11;
-    uint2 l_g     = pal[10,2];
-    uint2 h_g     = (l_g != 2b11) ? (l_g + 2b01) : 2b11;
-    uint2 l_b     = pal[ 4,2];
-    uint2 h_b     = (l_b != 2b11) ? (l_b + 2b01) : 2b11;
+    uint6 l_r     = pal[14,4]+bval4;
+    uint6 l_g     = pal[ 8,4]+bval4;
+    uint6 l_b     = pal[ 2,4]+bval4;
 
-    video_r     = vga.active ? (pal[12,4]<bval4?l_r:h_r) : 0;
-    video_g     = vga.active ? (pal[ 6,4]<bval4?l_b:h_g) : 0;
-    video_b     = vga.active ? (pal[ 0,4]<bval4?l_g:h_b) : 0;
+    video_r     = vga.active ? l_r[3,2] : 0;
+    video_g     = vga.active ? l_g[3,2] : 0;
+    video_b     = vga.active ? l_b[3,2] : 0;
 
 /*
     uint6 p6      = {vga.vga_x[0,3],vga.vga_y[0,3]};
