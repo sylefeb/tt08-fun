@@ -43,13 +43,13 @@ unit vga_demo(
     32b00000000000000000000,
   };
 */
-  int7   u  = 0;
-  uint14 uT = 0;
-  int7   v  = 0;
-  uint14 vT = 0;
+  int8   u  = 0;
+  uint15 uT = 0;
+  int8   v  = 0;
+  uint15 vT = 0;
 
-  int7  ru = uninitialized;
-  int7  rv = uninitialized;
+  int8  ru = uninitialized;
+  int8  rv = uninitialized;
 
   always {
 
@@ -63,14 +63,14 @@ unit vga_demo(
 
     uint5  pid    = doomhead[{rv[2,5],ru[2,5]}];
 
-    int7 ru = u - __signed(vT>>8);
-    int7 rv = __signed(uT>>8) + v;
+    ru = u - __signed(vT>>8);
+    rv = __signed(uT>>8) + v;
 
     uint18 pal    = pid == 0 ? 0 : sub666[pid];
 
     uint4 p4      = {vga.vga_y[0,2],vga.vga_x[0,2]};
     uint2 q4      = p4[0,2] ^ p4[2,2];
-    uint4 bval4   = {q4[0,1],p4[0,1], q4[1,1],p4[1,1]};
+    uint4 bval4   = {q4[0,1],p4[0,1], q4[1,1],p4[1,1]} ^ {4{frame[0,1]}};
 
     uint2 l_r     = pal[16,2];
     uint2 h_r     = (l_r != 2b11) ? (l_r + 2b01) : 2b11;

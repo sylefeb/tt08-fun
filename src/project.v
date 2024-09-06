@@ -347,9 +347,9 @@ endmodule
 
 // ==== defines ====
 `undef  _c___block_1_pid
-`define _c___block_1_pid (5'(_c_doomhead[{_q___block_1_rv[2+:5],_q___block_1_ru[2+:5]}]))
+`define _c___block_1_pid (5'(_c_doomhead[{_q_rv[2+:5],_q_ru[2+:5]}]))
 `undef  _c___block_1_bval4
-`define _c___block_1_bval4 (4'({_t___block_1_q4[0+:1],_t___block_1_p4[0+:1],_t___block_1_q4[1+:1],_t___block_1_p4[1+:1]}))
+`define _c___block_1_bval4 (4'({_t___block_1_q4[0+:1],_t___block_1_p4[0+:1],_t___block_1_q4[1+:1],_t___block_1_p4[1+:1]}^{4{_q_frame[0+:1]}}))
 `undef  _c___block_1_l_r
 `define _c___block_1_l_r (2'(_t___block_1_pal[16+:2]))
 `undef  _c___block_1_h_r
@@ -416,18 +416,18 @@ reg  [0:0] _d_prev_hs;
 reg  [0:0] _q_prev_hs;
 reg  [9:0] _d_frame;
 reg  [9:0] _q_frame;
-reg signed [6:0] _d_u;
-reg signed [6:0] _q_u;
-reg  [13:0] _d_uT;
-reg  [13:0] _q_uT;
-reg signed [6:0] _d_v;
-reg signed [6:0] _q_v;
-reg  [13:0] _d_vT;
-reg  [13:0] _q_vT;
-reg signed [6:0] _d___block_1_ru;
-reg signed [6:0] _q___block_1_ru;
-reg signed [6:0] _d___block_1_rv;
-reg signed [6:0] _q___block_1_rv;
+reg signed [7:0] _d_u;
+reg signed [7:0] _q_u;
+reg  [14:0] _d_uT;
+reg  [14:0] _q_uT;
+reg signed [7:0] _d_v;
+reg signed [7:0] _q_v;
+reg  [14:0] _d_vT;
+reg  [14:0] _q_vT;
+reg signed [7:0] _d_ru;
+reg signed [7:0] _q_ru;
+reg signed [7:0] _d_rv;
+reg signed [7:0] _q_rv;
 assign out_video_r = _t_video_r;
 assign out_video_g = _t_video_g;
 assign out_video_b = _t_video_b;
@@ -465,14 +465,14 @@ _d_u = _q_u;
 _d_uT = _q_uT;
 _d_v = _q_v;
 _d_vT = _q_vT;
-_d___block_1_ru = _q___block_1_ru;
-_d___block_1_rv = _q___block_1_rv;
+_d_ru = _q_ru;
+_d_rv = _q_rv;
 // _always_pre
 // __block_1
 
-_d___block_1_ru = _q_u-$signed(_q_vT>>8);
+_d_ru = _q_u-$signed(_q_vT>>8);
 
-_d___block_1_rv = $signed(_q_uT>>8)+_q_v;
+_d_rv = $signed(_q_uT>>8)+_q_v;
 
 _t___block_1_pal = `_c___block_1_pid==0 ? 0:_c_sub666[`_c___block_1_pid];
 
@@ -1597,8 +1597,8 @@ _q_u <= (reset) ? 0 : _d_u;
 _q_uT <= (reset) ? 0 : _d_uT;
 _q_v <= (reset) ? 0 : _d_v;
 _q_vT <= (reset) ? 0 : _d_vT;
-_q___block_1_ru <= _d___block_1_ru;
-_q___block_1_rv <= _d___block_1_rv;
+_q_ru <= _d_ru;
+_q_rv <= _d_rv;
 end
 
 endmodule
