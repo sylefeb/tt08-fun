@@ -346,8 +346,14 @@ end
 endmodule
 
 // ==== defines ====
-`undef  _c___block_1_pid
-`define _c___block_1_pid (5'(_c_doomhead[{_q_rv[2+:5],_q_ru[2+:5]}]))
+`undef  _c___block_1_pidA
+`define _c___block_1_pidA (5'(_c_doomhead[{_q_rv[2+:5],(_q_ru[2+:5]+_q_frame[0+:5])}]))
+`undef  _c___block_1_palA
+`define _c___block_1_palA (18'(_c_sub666[`_c___block_1_pidA]))
+`undef  _c___block_1_pidB
+`define _c___block_1_pidB (5'(_c_doomhead[{_q_rv[1+:5],(_q_ru[1+:5]+_q_frame[1+:5])}]))
+`undef  _c___block_1_pidC
+`define _c___block_1_pidC (5'(_c_doomhead[{_q_rv[0+:5],(_q_ru[0+:5]+_q_frame[2+:5])}]))
 `undef  _c___block_1_bval4
 `define _c___block_1_bval4 (4'({_t___block_1_q4[0+:1],_t___block_1_p4[0+:1],_t___block_1_q4[1+:1],_t___block_1_p4[1+:1]}^{4{_q_frame[0+:1]}}))
 `undef  _c___block_1_l_r
@@ -366,8 +372,8 @@ endmodule
 `define _c___block_1_frame_tick (1'(_q_prev_vs&~_w_vga_vga_vs))
 `undef  _c___block_1_tri
 `define _c___block_1_tri (9'({_d_frame[0+:9]^{9{_d_frame[9+:1]}}}))
-`undef  _c___block_6_line_tick
-`define _c___block_6_line_tick (1'(_q_prev_hs&~_w_vga_vga_hs))
+`undef  _c___block_1_line_tick
+`define _c___block_1_line_tick (1'(_q_prev_hs&~_w_vga_vga_hs))
 // ===============
 
 module M_vga_demo_M_main_demo (
@@ -401,6 +407,8 @@ wire  [11:0] _w_vga_vga_x;
 wire  [10:0] _w_vga_vga_y;
 wire signed [7:0] _w_zic_audio8;
 wire  [0:0] _w_zic_audio1;
+reg  [17:0] _t___block_1_palB;
+reg  [17:0] _t___block_1_palC;
 reg  [17:0] _t___block_1_pal;
 reg  [3:0] _t___block_1_p4;
 reg  [1:0] _t___block_1_q4;
@@ -470,11 +478,18 @@ _d_rv = _q_rv;
 // _always_pre
 // __block_1
 
+
+
+_t___block_1_palB = _c_sub666[`_c___block_1_pidB];
+
+
+_t___block_1_palC = _c_sub666[`_c___block_1_pidC];
+
 _d_ru = _q_u-$signed(_q_vT>>8);
 
 _d_rv = $signed(_q_uT>>8)+_q_v;
 
-_t___block_1_pal = `_c___block_1_pid==0 ? 0:_c_sub666[`_c___block_1_pid];
+_t___block_1_pal = `_c___block_1_pidA==0 ? (`_c___block_1_pidB==0 ? (`_c___block_1_pidC==0 ? 0:{2'b0,_t___block_1_palC[14+:4],2'b0,_t___block_1_palC[8+:4],2'b0,_t___block_1_palC[2+:4]}):{1'b0,_t___block_1_palB[13+:5],1'b0,_t___block_1_palB[7+:5],1'b0,_t___block_1_palB[1+:5]}):`_c___block_1_palA;
 
 _t___block_1_p4 = {_w_vga_vga_y[0+:2],_w_vga_vga_x[0+:2]};
 
@@ -503,16 +518,6 @@ _d_prev_vs = _w_vga_vga_vs;
 _d_frame = `_c___block_1_frame_tick ? (_q_frame+1):_q_frame;
 
 
-if (`_c___block_1_frame_tick) begin
-// __block_2
-// __block_4
-
-// __block_5
-end else begin
-// __block_3
-end
-// 'after'
-// __block_6
 
 _d_prev_hs = _w_vga_vga_hs;
 
@@ -520,11 +525,11 @@ _d_u = ~_w_vga_vga_hs ? 0:(_q_u+1);
 
 _d_uT = ~_w_vga_vga_hs ? 0:(_q_uT+$signed(`_c___block_1_tri));
 
-_d_v = ~_w_vga_vga_vs ? 0:(`_c___block_6_line_tick ? (_q_v+1):_q_v);
+_d_v = ~_w_vga_vga_vs ? 0:(`_c___block_1_line_tick ? (_q_v+1):_q_v);
 
-_d_vT = ~_w_vga_vga_vs ? 0:(`_c___block_6_line_tick ? (_q_vT+$signed(`_c___block_1_tri)):_q_vT);
+_d_vT = ~_w_vga_vga_vs ? 0:(`_c___block_1_line_tick ? (_q_vT+$signed(`_c___block_1_tri)):_q_vT);
 
-// __block_7
+// __block_2
 // _always_post
 // pipeline stage triggers
 end
