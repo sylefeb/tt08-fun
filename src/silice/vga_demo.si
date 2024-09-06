@@ -29,34 +29,36 @@ unit vga_demo(
   uint1 prev_hs = uninitialized;
   uint9 frame   = 0;
 
-// #*#   ##   ##  ## ##
-// #  # #  # #  # # # #
-// #*#   ##   ##  #   #
+  // #*#   ##   ##  ## ##
+  // #  # #  # #  # # # #
+  // #*#   ##   ##  #   #
 
   uint32 logo[] = {
-/*
-    32b11100011000110011011,
-    32b10010100101001010101,
-    32b11100011000110010001,
-    32b00000000000000000000,
-*/
     32b11011001100011000111,
     32b10101010010100101001,
     32b10001001100011000111,
     32b00000000000000000000,
   };
 
-  int16 u   = 0;
-  int16 v   = 0;
-  int16 cs  = 64;
-  int16 ss  = 0;
+  int7   u  = 0;
+  uint14 uT = 0;
+  int7   v  = 0;
+  uint14 vT = 0;
 
   always {
 
-    uint32 l_logo = logo[v[11,2]];
-    uint1  select = l_logo[u[10,5],1];
-    uint5  pid    = doomhead[{select^frame[3,1],v[5,5],u[5,5]}];
-    uint18 pal    = sub666[pid];
+    //uint32 l_logo = logo[v[11,2]];
+    //uint1  select = l_logo[u[10,5],1];
+
+    //int16 ru = u - ((v * __signed(frame[0,8]))>>>8);
+    //int16 rv = ((u * __signed(frame[0,8]))>>>8) + v;
+    int7 ru = u - __signed(vT>>8);
+    int7 rv = __signed(uT>>8) + v;
+
+    uint1  select = ru[2,1] ^ rv[2,1];
+
+    uint5  pid    = doomhead[{select^frame[3,1],rv[2,5],ru[2,5]}];
+    uint18 pal    = pid == 0 ? 0 : sub666[pid];
 /*
     uint4 p4      = {vga.vga_y[0,2],vga.vga_x[0,2]};
     uint2 q4      = p4[0,2] ^ p4[2,2];
@@ -88,16 +90,20 @@ unit vga_demo(
     prev_vs          = vga.vga_vs;
     frame            = frame_tick ? (frame + 1) : frame;
 
-    uint5 step       = {frame[1,4] ^ {5{frame[5,1]}},1b1};
+    // uint5 step       = {frame[1,4] ^ {5{frame[5,1]}},1b1};
 
+
+    uint8 tri = {frame[0,8] ^ {8{frame[8,1]}}};
     if (frame_tick) {
-      __display("tick %d step %d",frame,step);
+      __display("tick %d tri %d",frame,tri);
     }
 
     uint1 line_tick  = prev_hs & ~vga.vga_hs;
     prev_hs          = vga.vga_hs;
-    u  = ~vga.vga_hs ? 0 : (u+cs-ss);
-    v  = ~vga.vga_vs ? 0 : (line_tick ? (v+cs+ss) : v);
+    u  = ~vga.vga_hs ? 0 : (u+1);
+    uT = ~vga.vga_hs ? 0 : (uT+__signed(tri));
+    v  = ~vga.vga_vs ? 0 : (line_tick ? (v+1) : v);
+    vT = ~vga.vga_vs ? 0 : (line_tick ? (vT+__signed(tri)) : vT);
 
   }
 

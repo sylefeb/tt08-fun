@@ -187,15 +187,15 @@ endmodule
 
 // ==== defines ====
 `undef  _c___block_1_select
-`define _c___block_1_select (1'(_t___block_1_l_logo[_q_u[10+:5]+:1]))
+`define _c___block_1_select (1'(_t___block_1_ru[2+:1]^_t___block_1_rv[2+:1]))
 `undef  _c___block_1_pid
-`define _c___block_1_pid (5'(_c_doomhead[{`_c___block_1_select^_q_frame[3+:1],_q_v[5+:5],_q_u[5+:5]}]))
+`define _c___block_1_pid (5'(_c_doomhead[{`_c___block_1_select^_q_frame[3+:1],_t___block_1_rv[2+:5],_t___block_1_ru[2+:5]}]))
 `undef  _c___block_1_bval6
 `define _c___block_1_bval6 (6'({_t___block_1_q6[0+:1],_t___block_1_p6[0+:1],_t___block_1_q6[1+:1],_t___block_1_p6[1+:1],_t___block_1_q6[2+:1],_t___block_1_p6[2+:1]}))
 `undef  _c___block_1_frame_tick
 `define _c___block_1_frame_tick (1'(_q_prev_vs&~_w_vga_vga_vs))
-`undef  _c___block_1_step
-`define _c___block_1_step (5'({_d_frame[1+:4]^{5{_d_frame[5+:1]}},1'b1}))
+`undef  _c___block_1_tri
+`define _c___block_1_tri (8'({_d_frame[0+:8]^{8{_d_frame[8+:1]}}}))
 `undef  _c___block_6_line_tick
 `define _c___block_6_line_tick (1'(_q_prev_hs&~_w_vga_vga_hs))
 // ===============
@@ -225,7 +225,8 @@ wire  [0:0] _w_vga_active;
 wire  [0:0] _w_vga_vblank;
 wire  [11:0] _w_vga_vga_x;
 wire  [10:0] _w_vga_vga_y;
-reg  [31:0] _t___block_1_l_logo;
+reg signed [6:0] _t___block_1_ru;
+reg signed [6:0] _t___block_1_rv;
 reg  [17:0] _t___block_1_pal;
 reg  [5:0] _t___block_1_p6;
 reg  [2:0] _t___block_1_q6;
@@ -241,10 +242,14 @@ reg  [0:0] _d_prev_hs;
 reg  [0:0] _q_prev_hs;
 reg  [8:0] _d_frame;
 reg  [8:0] _q_frame;
-reg  [14:0] _d_u;
-reg  [14:0] _q_u;
-reg  [12:0] _d_v;
-reg  [12:0] _q_v;
+reg signed [6:0] _d_u;
+reg signed [6:0] _q_u;
+reg  [13:0] _d_uT;
+reg  [13:0] _q_uT;
+reg signed [6:0] _d_v;
+reg signed [6:0] _q_v;
+reg  [13:0] _d_vT;
+reg  [13:0] _q_vT;
 assign out_video_r = _t_video_r;
 assign out_video_g = _t_video_g;
 assign out_video_b = _t_video_b;
@@ -272,14 +277,18 @@ _d_prev_vs = _q_prev_vs;
 _d_prev_hs = _q_prev_hs;
 _d_frame = _q_frame;
 _d_u = _q_u;
+_d_uT = _q_uT;
 _d_v = _q_v;
+_d_vT = _q_vT;
 // _always_pre
 // __block_1
-_t___block_1_l_logo = _c_logo[_q_v[11+:2]];
+_t___block_1_ru = _q_u-$signed(_q_vT>>8);
+
+_t___block_1_rv = $signed(_q_uT>>8)+_q_v;
 
 
 
-_t___block_1_pal = _c_sub666[`_c___block_1_pid];
+_t___block_1_pal = `_c___block_1_pid==0 ? 0:_c_sub666[`_c___block_1_pid];
 
 _t___block_1_p6 = {_w_vga_vga_x[0+:3],_w_vga_vga_y[0+:3]};
 
@@ -315,9 +324,13 @@ end
 
 _d_prev_hs = _w_vga_vga_hs;
 
-_d_u = ~_w_vga_vga_hs ? (_d_frame<<5):(_q_u+`_c___block_1_step);
+_d_u = ~_w_vga_vga_hs ? 0:(_q_u+1);
 
-_d_v = ~_w_vga_vga_vs ? 0:(`_c___block_6_line_tick ? (_q_v+`_c___block_1_step):_q_v);
+_d_uT = ~_w_vga_vga_hs ? 0:(_q_uT+$signed(`_c___block_1_tri));
+
+_d_v = ~_w_vga_vga_vs ? 0:(`_c___block_6_line_tick ? (_q_v+1):_q_v);
+
+_d_vT = ~_w_vga_vga_vs ? 0:(`_c___block_6_line_tick ? (_q_vT+$signed(`_c___block_1_tri)):_q_vT);
 
 // __block_7
 // _always_post
@@ -2406,11 +2419,6 @@ assign _c_sub666[28] = 260896;
 assign _c_sub666[29] = 161816;
 assign _c_sub666[30] = 70408;
 assign _c_sub666[31] = 260630;
-wire  [31:0] _c_logo[3:0];
-assign _c_logo[0] = 32'b11011001100011000111;
-assign _c_logo[1] = 32'b10101010010100101001;
-assign _c_logo[2] = 32'b10001001100011000111;
-assign _c_logo[3] = 32'b00000000000000000000;
 // ===============
 
 always @(posedge clock) begin
@@ -2418,7 +2426,9 @@ _q_prev_vs <= _d_prev_vs;
 _q_prev_hs <= _d_prev_hs;
 _q_frame <= (reset) ? 0 : _d_frame;
 _q_u <= (reset) ? 0 : _d_u;
+_q_uT <= (reset) ? 0 : _d_uT;
 _q_v <= (reset) ? 0 : _d_v;
+_q_vT <= (reset) ? 0 : _d_vT;
 end
 
 endmodule
