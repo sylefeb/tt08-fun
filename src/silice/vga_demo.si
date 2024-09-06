@@ -46,9 +46,10 @@ unit vga_demo(
     32b00000000000000000000,
   };
 
-  uint15 u      = 0;
-  uint13 v      = 0;
-  uint8  step   = 1;
+  int16 u   = 0;
+  int16 v   = 0;
+  int16 cs  = 64;
+  int16 ss  = 0;
 
   always {
 
@@ -95,8 +96,8 @@ unit vga_demo(
 
     uint1 line_tick  = prev_hs & ~vga.vga_hs;
     prev_hs          = vga.vga_hs;
-    u  = ~vga.vga_hs ? (frame<<5) : (u+step);
-    v  = ~vga.vga_vs ? 0          : (line_tick ? (v+step) : v);
+    u  = ~vga.vga_hs ? 0 : (u+cs-ss);
+    v  = ~vga.vga_vs ? 0 : (line_tick ? (v+cs+ss) : v);
 
   }
 
