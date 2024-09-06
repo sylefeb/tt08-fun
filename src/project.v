@@ -387,12 +387,12 @@ reg  [9:0] _d_frame;
 reg  [9:0] _q_frame;
 reg signed [7:0] _d_u;
 reg signed [7:0] _q_u;
-reg  [14:0] _d_uT;
-reg  [14:0] _q_uT;
+reg  [11:0] _d_uT;
+reg  [11:0] _q_uT;
 reg signed [7:0] _d_v;
 reg signed [7:0] _q_v;
-reg  [14:0] _d_vT;
-reg  [14:0] _q_vT;
+reg  [11:0] _d_vT;
+reg  [11:0] _q_vT;
 reg  [9:0] _d_addr;
 reg  [9:0] _q_addr;
 assign out_video_r = _t_video_r;
@@ -437,9 +437,9 @@ _d_addr = _q_addr;
 // __block_1
 
 
-_t___block_1_ru = _q_u-$signed(_q_vT>>8);
+_t___block_1_ru = _q_u-$signed(_q_vT>>5);
 
-_t___block_1_rv = $signed(_q_uT>>8)+_q_v;
+_t___block_1_rv = $signed(_q_uT>>5)+_q_v;
 
 
 

@@ -44,9 +44,9 @@ unit vga_demo(
   };
 */
   int8   u  = 0;
-  uint15 uT = 0;
+  uint12 uT = 0;
   int8   v  = 0;
-  uint15 vT = 0;
+  uint12 vT = 0;
 
   uint10 addr = uninitialized;
 
@@ -69,8 +69,8 @@ unit vga_demo(
 //    uint5  pidC = doomhead[{rv[0,5],(ru[0,5] + frame[2,5])}];
 //    uint18 palC = sub666[pidC];
 
-    int8  ru   = u - __signed(vT>>8);
-    int8  rv   = __signed(uT>>8) + v;
+    int8  ru   = u - __signed(vT>>5);
+    int8  rv   = __signed(uT>>5) + v;
     uint5 i    = (ru[2,5] + frame[0,5]);
     uint1 clip = i<5d24;
     uint5 j    = rv[2,5];
