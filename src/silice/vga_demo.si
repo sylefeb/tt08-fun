@@ -3,6 +3,8 @@
 // MIT license
 // ========================================================
 
+// What?? Why?? ...well, why not?
+
 // VGA driver
 $include('../common/vga.si')
 
@@ -29,21 +31,21 @@ unit vga_demo(
   $doomhead$
   $sub666$
 
-  uint1 prev_vs = uninitialized;
-  uint1 prev_hs = uninitialized;
-  uint9 frame   = 0;
+  uint1  prev_vs = uninitialized;
+  uint1  prev_hs = uninitialized;
+  uint10 frame   = 0;
 
   // #*#   ##   ##  ## ##
   // #  # #  # #  # # # #
   // #*#   ##   ##  #   #
-
+/*
   uint32 logo[] = {
     32b11011001100011000111,
     32b10101010010100101001,
     32b10001001100011000111,
     32b00000000000000000000,
   };
-
+*/
   int7   u  = 0;
   uint14 uT = 0;
   int7   v  = 0;
@@ -61,7 +63,7 @@ unit vga_demo(
 
     uint1  select = ru[6,1] ^ rv[6,1];
 
-    uint5  pid    = doomhead[{select^frame[3,1],rv[1,5],ru[1,5]}];
+    uint5  pid    = doomhead[{1b0,rv[1,5],ru[1,5]}];
     uint18 pal    = pid == 0 ? 0 : sub666[pid];
 /*
     uint4 p4      = {vga.vga_y[0,2],vga.vga_x[0,2]};
@@ -69,16 +71,17 @@ unit vga_demo(
     uint4 bval4   = {q4[0,1],p4[0,1], q4[1,1],p4[1,1]};
 
     uint2 l_r     = pal[16,2];
-    uint2 h_r     = l_r != 2b11 ? (l_r + 2b01) : 2b11;
+    uint2 h_r     = (l_r != 2b11) ? (l_r + 2b01) : 2b11;
     uint2 l_g     = pal[10,2];
-    uint2 h_g     = l_g != 2b11 ? (l_g + 2b01) : 2b11;
+    uint2 h_g     = (l_g != 2b11) ? (l_g + 2b01) : 2b11;
     uint2 l_b     = pal[ 4,2];
-    uint2 h_b     = l_b != 2b11 ? (l_b + 2b01) : 2b11;
+    uint2 h_b     = (l_b != 2b11) ? (l_b + 2b01) : 2b11;
 
     video_r     = vga.active ? (pal[12,4]<bval4?l_r:h_r) : 0;
     video_g     = vga.active ? (pal[ 6,4]<bval4?l_b:h_g) : 0;
     video_b     = vga.active ? (pal[ 0,4]<bval4?l_g:h_b) : 0;
 */
+
     uint6 p6      = {vga.vga_x[0,3],vga.vga_y[0,3]};
     uint3 q6      = p6[0,3] ^ p6[3,3];
     uint6 bval6   = {q6[0,1], p6[0,1], q6[1,1],p6[1,1], q6[2,1],p6[2,1]};
@@ -97,7 +100,7 @@ unit vga_demo(
     // uint5 step       = {frame[1,4] ^ {5{frame[5,1]}},1b1};
 
 
-    uint8 tri = {frame[0,8] ^ {8{frame[8,1]}}};
+    uint9 tri = {frame[0,9] ^ {9{frame[9,1]}}};
     if (frame_tick) {
       __display("tick %d tri %d",frame,tri);
     }
@@ -130,7 +133,7 @@ unit music(
 
   //  ^ could reduce if skipping highest tones
 
-  uint7  idx          = 0;
+  uint6  idx          = 0;
   uint9  clock_count  = 0;
   uint13 rythm_count  = 0;
   uint13 qpos         = 0;
