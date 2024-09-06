@@ -61,7 +61,7 @@ unit vga_demo(
     //uint1  select = ru[6,1] ^ rv[6,1];
 
     uint5  pidA = doomhead[addr];
-    uint18 palA = sub666[pidA];
+    uint12 palA = sub666[pidA];
 //->
 //    uint5  pidB = doomhead[{rv[1,5],(ru[1,5] + frame[1,5])}];
 //    uint18 palB = sub666[pidB];
@@ -82,9 +82,9 @@ unit vga_demo(
     uint2 q4      = p4[0,2] ^ p4[2,2];
     uint4 bval4   = {q4[0,1],p4[0,1], q4[1,1],p4[1,1]} ^ {4{frame[0,1]}};
 
-    uint6 l_r     = pidA == 0 ? 0 : pal[14,4]+bval4;
-    uint6 l_g     = pidA == 0 ? 0 : pal[ 8,4]+bval4;
-    uint6 l_b     = pidA == 0 ? 0 : pal[ 2,4]+bval4;
+    uint6 l_r     = pidA == 0 ? 0 : pal[8,4]+bval4;
+    uint6 l_g     = pidA == 0 ? 0 : pal[4,4]+bval4;
+    uint6 l_b     = pidA == 0 ? 0 : pal[0,4]+bval4;
 
     video_r     = vga.active ? l_r[3,2] : 0;
     video_g     = vga.active ? l_g[3,2] : 0;

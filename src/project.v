@@ -317,7 +317,7 @@ endmodule
 `undef  _c___block_1_pidA
 `define _c___block_1_pidA (5'(_c_doomhead[_q_addr]))
 `undef  _c___block_1_palA
-`define _c___block_1_palA (18'(_c_sub666[`_c___block_1_pidA]))
+`define _c___block_1_palA (12'(_c_sub666[`_c___block_1_pidA]))
 `undef  _c___block_1_i
 `define _c___block_1_i (5'((_t___block_1_ru[3+:5]+_q_frame[3+:5])))
 `undef  _c___block_1_clip
@@ -453,11 +453,11 @@ _t___block_1_p4 = {_w_vga_vga_y[0+:2],_w_vga_vga_x[0+:2]};
 _t___block_1_q4 = _t___block_1_p4[0+:2]^_t___block_1_p4[2+:2];
 
 
-_t___block_1_l_r = `_c___block_1_pidA==0 ? 0:_t___block_1_pal[14+:4]+`_c___block_1_bval4;
+_t___block_1_l_r = `_c___block_1_pidA==0 ? 0:_t___block_1_pal[8+:4]+`_c___block_1_bval4;
 
-_t___block_1_l_g = `_c___block_1_pidA==0 ? 0:_t___block_1_pal[8+:4]+`_c___block_1_bval4;
+_t___block_1_l_g = `_c___block_1_pidA==0 ? 0:_t___block_1_pal[4+:4]+`_c___block_1_bval4;
 
-_t___block_1_l_b = `_c___block_1_pidA==0 ? 0:_t___block_1_pal[2+:4]+`_c___block_1_bval4;
+_t___block_1_l_b = `_c___block_1_pidA==0 ? 0:_t___block_1_pal[0+:4]+`_c___block_1_bval4;
 
 _t_video_r = _w_vga_active ? _t___block_1_l_r[3+:2]:0;
 
@@ -1188,39 +1188,39 @@ assign _c_doomhead[692] = 5'h00;
 assign _c_doomhead[693] = 5'h00;
 assign _c_doomhead[694] = 5'h00;
 assign _c_doomhead[695] = 5'h00;
-wire  [17:0] _c_sub666[31:0];
+wire  [11:0] _c_sub666[31:0];
 assign _c_sub666[0] = 0;
-assign _c_sub666[1] = 144845;
-assign _c_sub666[2] = 120010;
-assign _c_sub666[3] = 182033;
-assign _c_sub666[4] = 107593;
-assign _c_sub666[5] = 173776;
-assign _c_sub666[6] = 95240;
-assign _c_sub666[7] = 219286;
-assign _c_sub666[8] = 165519;
-assign _c_sub666[9] = 74566;
-assign _c_sub666[10] = 206803;
-assign _c_sub666[11] = 210964;
-assign _c_sub666[12] = 235930;
-assign _c_sub666[13] = 157198;
-assign _c_sub666[14] = 41475;
-assign _c_sub666[15] = 82887;
-assign _c_sub666[16] = 136524;
-assign _c_sub666[17] = 227608;
-assign _c_sub666[18] = 194450;
-assign _c_sub666[19] = 49796;
-assign _c_sub666[20] = 157060;
-assign _c_sub666[21] = 199051;
-assign _c_sub666[22] = 260630;
-assign _c_sub666[23] = 244252;
-assign _c_sub666[24] = 252574;
-assign _c_sub666[25] = 62149;
-assign _c_sub666[26] = 220048;
-assign _c_sub666[27] = 261028;
-assign _c_sub666[28] = 261094;
-assign _c_sub666[29] = 260894;
-assign _c_sub666[30] = 161816;
-assign _c_sub666[31] = 178055;
+assign _c_sub666[1] = 2131;
+assign _c_sub666[2] = 1858;
+assign _c_sub666[3] = 2932;
+assign _c_sub666[4] = 1602;
+assign _c_sub666[5] = 2660;
+assign _c_sub666[6] = 1346;
+assign _c_sub666[7] = 3461;
+assign _c_sub666[8] = 2659;
+assign _c_sub666[9] = 1073;
+assign _c_sub666[10] = 3188;
+assign _c_sub666[11] = 3205;
+assign _c_sub666[12] = 3734;
+assign _c_sub666[13] = 2403;
+assign _c_sub666[14] = 544;
+assign _c_sub666[15] = 1329;
+assign _c_sub666[16] = 2131;
+assign _c_sub666[17] = 3478;
+assign _c_sub666[18] = 2932;
+assign _c_sub666[19] = 801;
+assign _c_sub666[20] = 2385;
+assign _c_sub666[21] = 3218;
+assign _c_sub666[22] = 4005;
+assign _c_sub666[23] = 3751;
+assign _c_sub666[24] = 4007;
+assign _c_sub666[25] = 801;
+assign _c_sub666[26] = 3508;
+assign _c_sub666[27] = 4025;
+assign _c_sub666[28] = 4025;
+assign _c_sub666[29] = 4023;
+assign _c_sub666[30] = 2438;
+assign _c_sub666[31] = 2673;
 // ===============
 
 always @(posedge clock) begin
