@@ -25,20 +25,37 @@ unit vga_demo(
   $doomhead$
   $sub666$
 
+  uint1 prev_vs = uninitialized;
+  uint8 frame   = 0;
+
   always {
 
-    uint5  pid  = doomhead[{vga.vga_y[2,5],vga.vga_x[2,5]}];
-    uint24 pal  = sub666[pid];
+    uint5  pid  = doomhead[{frame[0,3],vga.vga_y[2,5],vga.vga_x[2,5]}];
+    uint18 pal  = sub666[pid];
 
-    uint6 p6    = {vga.vga_x[0,3],vga.vga_y[0,3]};
-    uint3 q6    = p6[0,3] ^ p6[3,3];
-    uint6 bval6 = {q6[0,1], p6[0,1], q6[1,1],p6[1,1], q6[2,1],p6[2,1]};
+    uint4 p4      = {vga.vga_y[0,2],vga.vga_x[0,2]};
+    uint2 q4      = p4[0,2] ^ p4[2,2];
+    uint4 bval4   = {q4[0,1],p4[0,1], q4[1,1],p4[1,1]};
 
-    video_r     = vga.active ? (pal[12,6]<bval6?2b00:2b11) : 0;
-    video_g     = vga.active ? (pal[ 6,6]<bval6?2b00:2b11) : 0;
-    video_b     = vga.active ? (pal[ 0,6]<bval6?2b00:2b11) : 0;
+    uint2 l_r     = pal[16,2];
+    uint2 h_r     = ~l_r[1,1] ? (l_r + 2b01) : 2b11;
+    uint2 l_g     = pal[10,2];
+    uint2 h_g     = ~l_g[1,1] ? (l_g + 2b01) : 2b11;
+    uint2 l_b     = pal[ 4,2];
+    uint2 h_b     = ~l_b[1,1] ? (l_b + 2b01) : 2b11;
+
+    video_r     = vga.active ? (pal[12,4]<bval4?l_r:h_r) : 0;
+    video_g     = vga.active ? (pal[ 6,4]<bval4?l_b:h_g) : 0;
+    video_b     = vga.active ? (pal[ 0,4]<bval4?l_g:h_b) : 0;
     video_hs    = vga.vga_hs;
     video_vs    = vga.vga_vs;
+
+    uint1 frame_tick = prev_vs & ~vga.vga_vs;
+    prev_vs          = vga.vga_vs;
+    frame            = frame_tick ? (frame + 1) : frame;
+    if (frame_tick) {
+      __display("tick %d",frame);
+    }
 
   }
 
