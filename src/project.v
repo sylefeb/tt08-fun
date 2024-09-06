@@ -329,7 +329,7 @@ endmodule
 `undef  _c___block_1_frame_tick
 `define _c___block_1_frame_tick (1'(_q_prev_vs&~_w_vga_vga_vs))
 `undef  _c___block_1_tri
-`define _c___block_1_tri (8'({_d_frame[0+:8]^{8{_d_frame[8+:1]}}}))
+`define _c___block_1_tri (8'({_d_frame[1+:8]^{8{_d_frame[9+:1]}}}))
 `undef  _c___block_1_line_tick
 `define _c___block_1_line_tick (1'(_q_prev_hs&~_w_vga_vga_hs))
 // ===============
