@@ -8,24 +8,37 @@ $include('../common/vga.si')
 
 // -------------------------
 
+$include('doomhead.si')
+
+// -------------------------
+
 unit vga_demo(
   output! uint2 video_r,
   output! uint2 video_g,
   output! uint2 video_b,
-  output  uint1 video_hs,
-  output  uint1 video_vs,
+  output! uint1 video_hs,
+  output! uint1 video_vs,
 ) {
 
-  vga vga(
-    vga_hs :> video_hs,
-    vga_vs :> video_vs,
-  );
+  vga vga;
+
+  $doomhead$
+  $sub666$
 
   always {
 
-    video_r = vga.active ? vga.vga_x : 0;
-    video_g = vga.active ? vga.vga_y : 0;
-    video_b = 0;
+    uint5  pid  = doomhead[{vga.vga_y[2,5],vga.vga_x[2,5]}];
+    uint24 pal  = sub666[pid];
+
+    uint6 p6    = {vga.vga_x[0,3],vga.vga_y[0,3]};
+    uint3 q6    = p6[0,3] ^ p6[3,3];
+    uint6 bval6 = {q6[0,1], p6[0,1], q6[1,1],p6[1,1], q6[2,1],p6[2,1]};
+
+    video_r     = vga.active ? (pal[12,6]<bval6?2b00:2b11) : 0;
+    video_g     = vga.active ? (pal[ 6,6]<bval6?2b00:2b11) : 0;
+    video_b     = vga.active ? (pal[ 0,6]<bval6?2b00:2b11) : 0;
+    video_hs    = vga.vga_hs;
+    video_vs    = vga.vga_vs;
 
   }
 

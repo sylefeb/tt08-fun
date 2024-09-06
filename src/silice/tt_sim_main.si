@@ -14,23 +14,22 @@ unit main(
   output! uint6 video_r,
   output! uint6 video_g,
   output! uint6 video_b,
-  output  uint1 video_hs,
-  output  uint1 video_vs,
+  output! uint1 video_hs,
+  output! uint1 video_vs,
 $$if VERILATOR then
   output! uint1 video_clock,
 $$end
 ) {
 
-  vga_demo demo(
-    video_hs :> video_hs,
-    video_vs :> video_vs,
-  );
+  vga_demo demo;
 
   always {
     video_clock = clock;
-    video_r = {demo.video_r,4b0};
-    video_g = {demo.video_g,4b0};
-    video_b = {demo.video_b,4b0};
+    video_r  = {demo.video_r,4b0};
+    video_g  = {demo.video_g,4b0};
+    video_b  = {demo.video_b,4b0};
+    video_hs = demo.video_hs;
+    video_vs = demo.video_vs;
   }
 
 }
