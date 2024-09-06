@@ -69,18 +69,14 @@ unit vga_demo(
 //    uint5  pidC = doomhead[{rv[0,5],(ru[0,5] + frame[2,5])}];
 //    uint18 palC = sub666[pidC];
 
-    int8  ru   = u - __signed(vT>>5);
-    int8  rv   = __signed(uT>>5) + v;
-    uint5 i    = (ru[2,5] + frame[0,5]);
-    uint1 clip = i<5d24;
-    uint5 j    = rv[2,5];
-    addr       = (i + {j,4b0} + {j,3b0}) & {10{clip}};
+    uint9  ru     = u - __signed(vT>>4);
+    uint9  rv     = __signed(uT>>4) + v;
+    uint5 i       = (ru[3,5] + frame[3,5]);
+    uint1 clip    = i<5d24;
+    uint5 j       = rv[3,5];
+    addr          = (i + {j,4b0} + {j,3b0}) & {10{clip}};
 
-    uint18 pal    = palA; /*pidA == 0
-                    ? //(pidB == 0 ?
-                      0 //(pidC == 0 ? 0 : {2b0,palC[14,4],2b0,palC[8,4],2b0,palC[2,4]})
-                      //: {1b0,palB[13,5],1b0,palB[7,5],1b0,palB[1,5]})
-                    : palA;*/
+    uint18 pal    = palA;
 
     uint4 p4      = {vga.vga_y[0,2],vga.vga_x[0,2]};
     uint2 q4      = p4[0,2] ^ p4[2,2];
@@ -94,20 +90,6 @@ unit vga_demo(
     video_g     = vga.active ? l_g[3,2] : 0;
     video_b     = vga.active ? l_b[3,2] : 0;
 
-/*
-    uint6 p6      = {vga.vga_x[0,3],vga.vga_y[0,3]};
-    uint3 q6      = p6[0,3] ^ p6[3,3];
-    uint6 bval6   = {q6[0,1], p6[0,1], q6[1,1],p6[1,1], q6[2,1],p6[2,1]};
-
-    video_r     = vga.active ? {2{(pal[12,6]>bval6)}} : 0;
-    video_g     = vga.active ? {2{(pal[ 6,6]>bval6)}} : 0;
-    video_b     = vga.active ? {2{(pal[ 0,6]>bval6)}} : 0;
-*/
-/*
-    video_r     = vga.active ? pal[12,6] : 0;
-    video_g     = vga.active ? pal[ 6,6] : 0;
-    video_b     = vga.active ? pal[ 0,6] : 0;
-*/
     video_hs    = vga.vga_hs;
     video_vs    = vga.vga_vs;
 
@@ -117,7 +99,7 @@ unit vga_demo(
 
     // uint5 step       = {frame[1,4] ^ {5{frame[5,1]}},1b1};
 
-    uint9 tri = {frame[0,9] ^ {9{frame[9,1]}}};
+    uint8 tri = {frame[0,8] ^ {8{frame[8,1]}}};
     //if (frame_tick) {
     //  __display("tick %d tri %d",frame,tri);
     //}
@@ -144,7 +126,7 @@ unit music(
   output! uint1 audio1
 ) {
 
-  uint7 keys[32] = {
+  uint5 keys[32] = {
     10,10,21,10, 10,18,10,10,
     15,10,10,15, 10,10,15,15,
     10,10,21,10, 10,18,10,10,

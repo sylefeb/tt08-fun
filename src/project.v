@@ -268,7 +268,7 @@ _d_clock_count = (_q_clock_count+1);
 // pipeline stage triggers
 end
 // ==== wires ====
-wire  [6:0] _c_keys[31:0];
+wire  [4:0] _c_keys[31:0];
 assign _c_keys[0] = 10;
 assign _c_keys[1] = 10;
 assign _c_keys[2] = 21;
@@ -319,17 +319,17 @@ endmodule
 `undef  _c___block_1_palA
 `define _c___block_1_palA (18'(_c_sub666[`_c___block_1_pidA]))
 `undef  _c___block_1_i
-`define _c___block_1_i (5'((_t___block_1_ru[2+:5]+_q_frame[0+:5])))
+`define _c___block_1_i (5'((_t___block_1_ru[3+:5]+_q_frame[3+:5])))
 `undef  _c___block_1_clip
 `define _c___block_1_clip (1'(`_c___block_1_i<5'd24))
 `undef  _c___block_1_j
-`define _c___block_1_j (5'(_t___block_1_rv[2+:5]))
+`define _c___block_1_j (5'(_t___block_1_rv[3+:5]))
 `undef  _c___block_1_bval4
 `define _c___block_1_bval4 (4'({_t___block_1_q4[0+:1],_t___block_1_p4[0+:1],_t___block_1_q4[1+:1],_t___block_1_p4[1+:1]}^{4{_q_frame[0+:1]}}))
 `undef  _c___block_1_frame_tick
 `define _c___block_1_frame_tick (1'(_q_prev_vs&~_w_vga_vga_vs))
 `undef  _c___block_1_tri
-`define _c___block_1_tri (9'({_d_frame[0+:9]^{9{_d_frame[9+:1]}}}))
+`define _c___block_1_tri (8'({_d_frame[0+:8]^{8{_d_frame[8+:1]}}}))
 `undef  _c___block_1_line_tick
 `define _c___block_1_line_tick (1'(_q_prev_hs&~_w_vga_vga_hs))
 // ===============
@@ -365,8 +365,8 @@ wire  [11:0] _w_vga_vga_x;
 wire  [10:0] _w_vga_vga_y;
 wire signed [7:0] _w_zic_audio8;
 wire  [0:0] _w_zic_audio1;
-reg signed [7:0] _t___block_1_ru;
-reg signed [7:0] _t___block_1_rv;
+reg  [8:0] _t___block_1_ru;
+reg  [8:0] _t___block_1_rv;
 reg  [17:0] _t___block_1_pal;
 reg  [3:0] _t___block_1_p4;
 reg  [1:0] _t___block_1_q4;
@@ -437,9 +437,9 @@ _d_addr = _q_addr;
 // __block_1
 
 
-_t___block_1_ru = _q_u-$signed(_q_vT>>5);
+_t___block_1_ru = _q_u-$signed(_q_vT>>4);
 
-_t___block_1_rv = $signed(_q_uT>>5)+_q_v;
+_t___block_1_rv = $signed(_q_uT>>4)+_q_v;
 
 
 
