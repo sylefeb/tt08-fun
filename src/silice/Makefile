@@ -5,6 +5,9 @@ tinytapeout: tt_main.si
 verilator: tt_sim_main.si
 	silice-make.py -s tt_sim_main.si -b $@ -p basic,vga -o BUILD_$(subst :,_,$@) -t shell  -a force-reset-init,split-inouts $(ARGS)
 
+ecpix5: tt_fpga_main.si
+	silice-make.py -s tt_fpga_main.si -b tinytapeout -t tt_ecpix5 -p basic -o BUILD_$(subst :,_,$@) -D ECPIX5_SIM=1 -a force-reset-init,split-inouts $(ARGS)
+
 data: pre.si
 	mkdir -p ../build
 	# ./get_data.sh

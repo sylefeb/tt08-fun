@@ -95,8 +95,8 @@ $$  end
     uint9  ru     = u - __signed(vT>>4);
     uint9  rv     = __signed(uT>>4) + v;
     uint5 i       = (ru[3,5] + frame[3,5]);
-    uint1 clip    = i<5d24;
     uint5 j       = rv[3,5];
+    uint1 clip    = i<5d24 && j<5d29;
     addr          = (i + {j,4b0} + {j,3b0}) & {10{clip}};
 
     uint18 pal    = palA;

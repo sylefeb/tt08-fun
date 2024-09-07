@@ -12,7 +12,7 @@
 `define ICE40 1
 `define SIM_SB_IO 1
 
-module tt_um_whynot (
+module tt_um_silice (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
@@ -321,9 +321,7 @@ endmodule
 `undef  _c___block_1_i
 `define _c___block_1_i (5'((_t___block_1_ru[3+:5]+_q_frame[3+:5])))
 `undef  _c___block_1_clip
-`define _c___block_1_clip (1'(`_c___block_1_i<5'd24))
-`undef  _c___block_1_j
-`define _c___block_1_j (5'(_t___block_1_rv[3+:5]))
+`define _c___block_1_clip (1'(`_c___block_1_i<5'd24&&_q___block_1_j<5'd28))
 `undef  _c___block_1_bval4
 `define _c___block_1_bval4 (4'({_t___block_1_q4[0+:1],_t___block_1_p4[0+:1],_t___block_1_q4[1+:1],_t___block_1_p4[1+:1]}^{4{_q_frame[0+:1]}}))
 `undef  _c___block_1_frame_tick
@@ -395,6 +393,8 @@ reg  [11:0] _d_vT;
 reg  [11:0] _q_vT;
 reg  [9:0] _d_addr;
 reg  [9:0] _q_addr;
+reg  [4:0] _d___block_1_j;
+reg  [4:0] _q___block_1_j;
 assign out_video_r = _t_video_r;
 assign out_video_g = _t_video_g;
 assign out_video_b = _t_video_b;
@@ -433,6 +433,7 @@ _d_uT = _q_uT;
 _d_v = _q_v;
 _d_vT = _q_vT;
 _d_addr = _q_addr;
+_d___block_1_j = _q___block_1_j;
 // _always_pre
 // __block_1
 
@@ -443,8 +444,9 @@ _t___block_1_rv = $signed(_q_uT>>4)+_q_v;
 
 
 
+_d___block_1_j = _t___block_1_rv[3+:5];
 
-_d_addr = (`_c___block_1_i+{`_c___block_1_j,4'b0}+{`_c___block_1_j,3'b0})&{10{`_c___block_1_clip}};
+_d_addr = (`_c___block_1_i+{_d___block_1_j,4'b0}+{_d___block_1_j,3'b0})&{10{`_c___block_1_clip}};
 
 _t___block_1_pal = `_c___block_1_palA;
 
@@ -1216,6 +1218,7 @@ _q_uT <= (reset) ? 0 : _d_uT;
 _q_v <= (reset) ? 0 : _d_v;
 _q_vT <= (reset) ? 0 : _d_vT;
 _q_addr <= _d_addr;
+_q___block_1_j <= _d___block_1_j;
 end
 
 endmodule
@@ -1332,3 +1335,4 @@ _q_uo <= _d_uo;
 end
 
 endmodule
+
